@@ -1,4 +1,4 @@
-# PokeApp with Angular Material
+# ¡PokeApp con Angular!
 
 Aplicación de angular utilizando PokeApi:
 https://pokeapi.co/docs/v2#pokemon-section
