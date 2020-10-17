@@ -1,0 +1,30 @@
+<mat-card class="card">
+
+  
+
+  <mat-card-header>
+    <img mat-card-avatar class="header-image" src="{{pokemonImg}}">
+    <mat-card-title>{{pokemon.name}}</mat-card-title>
+    <mat-card-subtitle>Nº {{pokemon.id}}</mat-card-subtitle>
+    <mat-card-subtitle>Tipo: {{pokemonType}}</mat-card-subtitle>
+  </mat-card-header>
+
+  <img mat-card-image src="{{pokemonImg}}" alt="pokemon">
+
+  <mat-card-content>
+    <mat-chip-list>
+      <mat-chip color="primary">Altura: {{pokemon.height}}</mat-chip>
+      <mat-chip color="primary">Peso: {{pokemon.weight}}</mat-chip>
+    </mat-chip-list>
+    <hr>
+    <h3>Habilidades</h3>
+    <ol id="lista3">
+      <li *ngFor="let item of habilidades">{{item}}</li>
+    </ol>
+    <select name="miselect" class="select-css"
+      #mySelect
+      (change)='getPoke(mySelect.value)'>
+      <option [value]="item" *ngFor="let item of pokemones">{{item}}</option>
+    </select>
+  </mat-card-content>
+</mat-card>
