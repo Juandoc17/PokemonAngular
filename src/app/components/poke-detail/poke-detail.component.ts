@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PokemonService } from 'src/app/services/pokemon.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 interface Habilidad{
   name: string,
@@ -13,7 +14,7 @@ interface Habilidad{
   templateUrl: './poke-detail.component.html',
   styleUrls: ['./poke-detail.component.scss']
 })
-export class PokeDetailComponent implements OnInit {
+export class PokeDetailComponent implements OnInit, OnDestroy {
 
   selectedValue: string;
   pokemon: any = '';
@@ -35,9 +36,15 @@ export class PokeDetailComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  ngOnDestroy(){
+    if(this.serviceSubscription){
+    this.serviceSubscription.unsubscribe();   
+    }
+  }
+  private serviceSubscription: Subscription;
 
   getPokemon(id) {
-    this.pokemonService.getPokemons(id).subscribe(
+    this.serviceSubscription = this.pokemonService.getPokemons(id).subscribe(
       res => {
         console.log(res);
         this.pokemon = res;
@@ -60,7 +67,7 @@ export class PokeDetailComponent implements OnInit {
 
   getPokemons(){
     console.log("Habilidad in method: " + this.habilidad);
-    this.pokemonService.getPokemonsByAbility(this.habilidad).subscribe(
+    this.serviceSubscription = this.pokemonService.getPokemonsByAbility(this.habilidad).subscribe(
       res => {
         console.log(res.pokemon);
         console.log("Tamaño: " + res.pokemon.length);
@@ -76,7 +83,7 @@ export class PokeDetailComponent implements OnInit {
     console.log("Pokemon: " + pokemon);
     //console.log(this.pokemonService.getPokemons(pokemon));
     //this.router.navigateByUrl(`/pokeDetail/${this.pokemonService.getPokemons(pokemon)}`)
-    this.pokemonService.getPokemons(pokemon).subscribe(
+    this.serviceSubscription = this.pokemonService.getPokemons(pokemon).subscribe(
       res => {
         console.log(res);
         this.pokemonDropDown = res.id;

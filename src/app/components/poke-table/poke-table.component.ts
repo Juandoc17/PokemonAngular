@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PokemonService } from 'src/app/services/pokemon.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -10,7 +11,10 @@ import { Router } from '@angular/router';
   templateUrl: './poke-table.component.html',
   styleUrls: ['./poke-table.component.scss']
 })
-export class PokeTableComponent implements OnInit {
+
+
+
+export class PokeTableComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['position', 'image', 'name'];
   data: any[] = [];
@@ -26,12 +30,18 @@ export class PokeTableComponent implements OnInit {
   ngOnInit(): void {
     this.getPokemons();
   }
+  ngOnDestroy(){
+    if(this.serviceSubscription){
+    this.serviceSubscription.unsubscribe();   
+    }
+  }
+
+  private serviceSubscription: Subscription;
 
   getPokemons() {
     let pokemonData;
-
     for (let i = 1; i <= 150; i++) {
-      this.pokemonService.getPokemons(i).subscribe(
+      this.serviceSubscription = this.pokemonService.getPokemons(i).subscribe(
         res => {
           pokemonData = {
             position: i,
@@ -59,10 +69,9 @@ export class PokeTableComponent implements OnInit {
     }
   }
 
-
   getRow(row){
     //console.log(row);
     this.router.navigateByUrl(`/pokeDetail/${row.position}`)
   }
-
 }
+
